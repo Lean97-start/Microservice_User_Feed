@@ -1,0 +1,19 @@
+{
+  "name": "microservicio_user_feed",
+  "version": "1.0.0",
+  "description": "Microservicio (Proyecto facultativo)",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Lean97-start/Microservice_User_Feed.git"
+  },
+  "author": "Leandro Morello",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Lean97-start/Microservice_User_Feed/issues"
+  },
+  "homepage": "https://github.com/Lean97-start/Microservice_User_Feed#readme"
+}
