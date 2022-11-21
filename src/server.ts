@@ -1,40 +1,23 @@
 "use strict";
+import { environmentsConfig } from './server/environments';
+import { initExpress } from "./server/express";
+import { connectDBMongo } from './config/Mongo';
 
-import { MongoError } from "mongodb";
-import * as mongoose from "mongoose";
-import * as rabbitCart from "./rabbit/cartService";
-import * as logoutObserver from "./rabbit/logoutService";
-import * as env from "./server/environment";
-import { Config } from "./server/environment";
-import * as express from "./server/express";
+const config = environmentsConfig(); //Variables de entorno
+const PORT = config.port;
 
-// Variables de entorno
-const conf: Config = env.getConfig(process.env);
+// Conexión a mongo.
+connectDBMongo(config).then(
+    () => console.log("Database ready"),
+    () => console.log("Connection database failed")
+);
 
-// Mejoramos el log de las promesas
-process.on("unhandledRejection", (reason, p) => {
-  console.error("Unhandled Rejection at: Promise", p, "reason:", reason);
-});
+//Inicio instancia de express
+const app = initExpress(config);
 
-// Establecemos conexión con MongoDD
-mongoose.connect(conf.mongoDb, {}, function (err: MongoError) {
-  if (err) {
-    console.error("No se pudo conectar a MongoDB!");
-    console.error(err.message);
-    process.exit();
-  } else {
-    console.log("MongoDB conectado.");
-  }
-});
+// Conexiones a rabbit.
 
-// Se configura e inicia express
-const app = express.init(conf);
-
-rabbitCart.init();
-logoutObserver.init();
-
-app.listen(conf.port, () => {
-  console.log(`Cart Server escuchando en puerto ${conf.port}`);
-});
-
-module.exports = app;
+//Levanto instancia de server
+app.listen(PORT, () => {
+    console.log("Listen on the port", PORT)
+})
