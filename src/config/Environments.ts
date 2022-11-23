@@ -12,7 +12,8 @@ export function environmentsConfig(): Config {
             securityServer: env.AUTH_SERVICE_URL || "http://localhost:3000",
             catalogServer: env.CATALOG_SERVICE_URL ||"http://localhost:3002",
             orderServer: env.ORDER_SERVICE_URL || "http://localhost:3003",
-            rabbitUrl: env.RABBIT_URL || "amqp://localhost" 
+            rabbitUrl: env.RABBIT_URL || "amqp://localhost",
+            redisUrl: env.REDIS_URL || 'redis://localhost:6379'
         }
     }
     return config;
@@ -26,5 +27,5 @@ export interface Config {
     catalogServer: string;
     orderServer: string
     rabbitUrl: string;
+    redisUrl: string
 }
-

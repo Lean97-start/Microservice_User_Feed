@@ -1,5 +1,5 @@
 import { Schema, model } from "mongoose";
-import { Review } from "../interface/reviewModel";
+import { Review } from "../Interface/ReviewModel.Interface";
 
 const review = new Schema <Review>(
     {
@@ -16,7 +16,8 @@ const review = new Schema <Review>(
             required: true
         },
         score: {
-            type: Number
+            type: Number,
+            required: true
         }
     },
     {
@@ -25,4 +26,5 @@ const review = new Schema <Review>(
     }
 );
 
-const Review = model('Review', review);
+const Review = model('Review', review); //Vinculo el schema en el modelo.
+export default Review;

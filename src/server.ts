@@ -1,7 +1,8 @@
 "use strict";
-import { environmentsConfig } from './server/environments';
-import { initExpress } from "./server/express";
-import { connectDBMongo } from './config/Mongo';
+import { environmentsConfig } from './Config/Environments';
+import { initExpress } from "./Server/Express";
+import { connectDBMongo } from './Config/Mongo';
+import { redisInit } from './Redis/UserRedis';
 
 const config = environmentsConfig(); //Variables de entorno
 const PORT = config.port;
@@ -14,6 +15,9 @@ connectDBMongo(config).then(
 
 //Inicio instancia de express
 const app = initExpress(config);
+
+// Conexión Redis
+redisInit();
 
 // Conexiones a rabbit.
 
