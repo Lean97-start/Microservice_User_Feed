@@ -7,3 +7,12 @@ export interface IMessageToSendValidationOrder{
     _id_article: string,
     state_order: string
 }
+
+export interface PropsConsumer{
+    exchange: string,
+    channel: string
+}
+
+export interface IResultARticleBought{
+    article_bought_user: boolean
+}

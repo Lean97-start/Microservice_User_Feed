@@ -1,7 +1,7 @@
 import error from '../Error/Error_user';
 import { createClient } from 'redis';
 import { environmentsConfig} from '../Config/Environments';
-import { IUser } from '../Interface/UserReq.Interface';
+import { ISession, IUser } from '../Interface/UserReq.Interface';
 const redisEnv = environmentsConfig();
 
 let clienteRedis: any;
@@ -20,20 +20,18 @@ export function redisInit(){
     )
 }
 
-export function setUser(token: string, userData: IUser){
-    return clienteRedis.set(`${token}`, JSON.stringify(userData))
-    .then(
-        () => true,
-        () => false
-    )
+export async function setUser(token: string, userData: any){
+    return await clienteRedis.set(`${token}`, JSON.stringify(userData))
+    .then(() => true, () => false)
 }
 
-export function getUser(token: string){
-    return clienteRedis.get(`${token}`)
-    .then(
-        (res: IUser) => {return {token, user: res}},
-        (rej: Error) => {return error.USER_NOT_FOUND_REDIS}
-    )
+export async function getUser(token: string){
+    try {
+        let responseRedis = await clienteRedis.get(`${token}`)
+        return JSON.parse(responseRedis.toString());
+    } catch (err) {
+        return error.USER_NOT_FOUND_REDIS
+    }
 }
 
 export function deleteSessionUser(token: string){

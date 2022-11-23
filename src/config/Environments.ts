@@ -7,7 +7,7 @@ let config: Config
 export function environmentsConfig(): Config {
     if(!config){
         config = {
-            port: env.SERVER_PORT || "4100",            
+            port: env.SERVER_PORT || "3150",            
             mongoDb: env.MONGO_URL || "mongodb://localhost/review",
             securityServer: env.AUTH_SERVICE_URL || "http://localhost:3000",
             catalogServer: env.CATALOG_SERVICE_URL ||"http://localhost:3002",

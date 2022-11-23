@@ -1,4 +1,5 @@
 import { Schema, model } from "mongoose";
+import { IReviewCreate } from "../Interface/Review.interface";
 import { Review } from "../Interface/ReviewModel.Interface";
 
 const review = new Schema <Review>(
@@ -28,3 +29,7 @@ const review = new Schema <Review>(
 
 const Review = model('Review', review); //Vinculo el schema en el modelo.
 export default Review;
+
+export function createReview(review: IReviewCreate){
+    
+}

@@ -3,6 +3,7 @@ import { environmentsConfig } from './Config/Environments';
 import { initExpress } from "./Server/Express";
 import { connectDBMongo } from './Config/Mongo';
 import { redisInit } from './Redis/UserRedis';
+import { consumerResponseArticleBought } from './Rabbit/OrderServer';
 
 const config = environmentsConfig(); //Variables de entorno
 const PORT = config.port;
@@ -13,13 +14,15 @@ connectDBMongo(config).then(
     () => console.log("Connection database failed")
 );
 
-//Inicio instancia de express
-const app = initExpress(config);
-
 // Conexión Redis
 redisInit();
 
 // Conexiones a rabbit.
+consumerResponseArticleBought();
+
+//Inicio instancia de express
+const app = initExpress(config);
+
 
 //Levanto instancia de server
 app.listen(PORT, () => {
