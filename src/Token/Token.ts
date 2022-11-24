@@ -30,8 +30,11 @@ export async function validateToken(token: string) {
 export async function invalidateToken(token: string) {
   let existUser = await getUser(token);
   if (existUser) {
-    await deleteSessionUser(token);
-    console.log("Invalidate session token:", token);
+    if(await deleteSessionUser(token)){
+      console.log("Invalidate session token:", token);
+    }
+  }else{
+    console.log("El usuario no está")
   }
 }
 

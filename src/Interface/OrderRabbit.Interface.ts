@@ -8,9 +8,13 @@ export interface IMessageToSendValidationOrder{
     state_order: string
 }
 
-export interface PropsConsumer{
+export interface IPropsConsumer{
     exchange: string,
-    channel: string
+    queue: string
+}
+
+export interface IPropsLogoutConsumer{
+    exchange: string
 }
 
 export interface IResultARticleBought{

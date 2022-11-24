@@ -29,11 +29,11 @@ export interface IStateReviewCreate {
 }
 
 export interface IReviewDB {
+  _id: string;
   _id_user: string;
   _id_article: string;
   review_descript: string;
   score: number;
-  _id: object;
   createdAt: Date;
   updatedAt: Date;
 }

@@ -3,8 +3,10 @@ import {
   IValidateArticleBought,
 } from "../Interface/OrderRabbit.Interface";
 import { IRabbitMessage } from "../Interface/Rabbit.Interface";
+import { validatetUserArticleBought } from "../Review/Review";
 import { sendMessage } from "./EmitterRabbit/Emitter";
-import { createConsumerArticleBought } from "./ReceiveRabbit/Receive";
+// import { createConsumerArticleBought } from "./ReceiveRabbit/Receive";
+import { createConsumer } from "./ReceiveRabbit/Receive";
 
 export async function sendMessageValidateArticleBought(_id_user: string, _id_article: string): Promise<IRabbitMessage> {
   const messageToOrder: IRabbitMessage = {
@@ -23,8 +25,8 @@ export async function sendMessageValidateArticleBought(_id_user: string, _id_art
 //Función que se inicializará y quedara escuchando en el canal para resultados que envie el servicio de order.
 export async function consumerResponseArticleBought(){
   const propsConsumer = {
-    exchange: "article_bought_user",
-    channel: "article_bought_user"
+    exchange: "review",
+    queue: "article_bought_user"
   }
-  await createConsumerArticleBought(propsConsumer);
+  await createConsumer(propsConsumer, validatetUserArticleBought);
 }

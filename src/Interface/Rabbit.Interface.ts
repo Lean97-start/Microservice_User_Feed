@@ -4,3 +4,7 @@ export interface IRabbitMessage{
     queue: string,
     message: any
 }
+
+export interface IRabbitFunction {
+    (source: IRabbitMessage): void;
+}

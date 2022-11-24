@@ -20,5 +20,5 @@ export async function sendMessage(message: IRabbitMessage): Promise<IRabbitMessa
         console.log(`RabbitMQ ${message.exchange} connection failed: ${error}`);
         return Promise.reject(error);
     }
-    return (messageSent)? Promise.resolve(message): Promise.reject(new Error("Not Send Message"));
+    return (messageSent)? Promise.resolve(message): Promise.reject(new Error("Not Sent Message"));
 }

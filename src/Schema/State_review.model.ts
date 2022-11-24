@@ -1,9 +1,9 @@
 import { Schema, model } from "mongoose";
-import { IStateReviewCreate } from "../Interface/Review.interface";
-import { State_Review } from "../Interface/ReviewModel.Interface";
+import { IStateReviewCreate, IStateReviewDB } from "../Interface/Review.interface";
+import { IState_Review } from "../Interface/ReviewModel.Interface";
 import error from '../Error/Error_article';
 
-const state_review = new Schema <State_Review>(
+const state_review = new Schema <IState_Review>(
     {
         _id_review: {
             type: String,
@@ -42,10 +42,20 @@ export async function createStateReview(_id_review: string){
     }
 }
 
-export async function searchStateReview(_id_review: string){
+export async function searchStateReview(_id: string){
     try {
-        const reviewFound = await state_Review.findOne({_id_review});
+        const reviewFound = await state_Review.findOne({_id_review: _id});
         return reviewFound;    
+    } catch (err) {
+        return error.ERROR_SERVER
+    }
+}
+
+
+export async function deleteStateReview(_id: string){
+    try {
+        const reviewModify: IStateReviewDB | any = await state_Review.findOneAndDelete({_id_review: _id});
+        if(reviewModify) return true;       
     } catch (err) {
         return error.ERROR_SERVER
     }
