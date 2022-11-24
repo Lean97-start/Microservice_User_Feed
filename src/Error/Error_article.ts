@@ -7,4 +7,6 @@ export default {
   MINIMUN_SIZE_5_WORDS: { error_message: "Minimun size is 5 words" },
   ERROR_SCORE: { error_message: "Error score" },
   ERROR_SERVER: { error_message: "An error occurred, try again" },
+  REPORTED_REVIEW: { error_message: "Reported review" },
+  NOT_CANNOT_MODIFY_REVIEW_NOT_AUTHORIZATION: { error_message: "Not authorization, you cannot modify the review" },
 };

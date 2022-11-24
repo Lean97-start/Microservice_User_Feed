@@ -2,9 +2,11 @@ import { sendMessageValidateArticleBought } from "../Rabbit/OrderServer";
 import { getUser } from "../Redis/UserRedis";
 import error from "../Error/Error_review";
 import { EventEmitter } from 'node:events';
-import { IResponseOrderServer, IReview } from "../Interface/Review.interface";
+import { IResponseOrderServer, IReview, IReviewCreate, IReviewDB, IReviewModify, IStateReviewDB } from "../Interface/Review.interface";
 import { IUser } from "../Interface/UserReq.Interface";
 import errorReviewArticle from "../Error/Error_article";
+import { createReview, searchReview } from "../Schema/Review.model";
+import { createStateReview, searchStateReview } from "../Schema/State_review.model";
 const listeOrderServer = new EventEmitter();
 
 
@@ -26,22 +28,68 @@ export async function consultUserArticleBought(token: string, _id_article: strin
 export async function validatetUserArticleBought(response: IResponseOrderServer) {
 }
 
-
+//Función creadora de review de un artículo comprado por el usuario.
 export async function addReview(token: string, _id_article:string, review: IReview){
-    const user: IUser = await getUser(token) //Tomamos el _id_user del token previamente validado en el middleware.
-    let _id_user = user.id;
+    try {
+        const user: IUser = await getUser(token) //Tomamos el _id_user del token previamente validado en el middleware.
+        let _id_user = user.id;
+        let errors = errorHandle(_id_article, review.review_descrip, review.score)
+        if(errors){return errors};
+        const objectReview: IReviewCreate = {
+            _id_user,
+            _id_article,
+            review_descript: review.review_descrip,
+            score: parseInt(review.score)
+        }
+        let userCreated: IReviewDB | any = await createReview(objectReview);
+        let stateReviewCreated = await createStateReview(userCreated._id);
+        return "Create Review successful";
+    } catch (err) {
+        console.log(err);
+        return error
+    }
+}
+
+//Función modificadora de review de un artículo comprado por el usuario.
+export async function modifyReview(token: string, _id_review:string, review: IReview){
+    try {
+        const user: IUser = await getUser(token) //Tomamos el _id_user del token previamente validado en el middleware.
+        let _id_user = user.id;
+        let errors = errorHandle(_id_review, review.review_descrip, review.score)
+        if(errors){return errors};
+        let userCreated: IReviewDB | any = await searchReview(_id_review);
+        if(userCreated._id_user !== _id_user){ return (errorReviewArticle.NOT_CANNOT_MODIFY_REVIEW_NOT_AUTHORIZATION)}
+        let stateReviewCreated: IStateReviewDB | any = await searchStateReview(userCreated._id);
+        if(stateReviewCreated.stateReviewActive = false) {return (errorReviewArticle.REPORTED_REVIEW)}
+        const objectReview: IReviewModify = {
+            _id_user,
+            _id_review,
+            review_descript: review.review_descrip,
+            score: parseInt(review.score)
+        }
+        return "Create Review successful";
+    } catch (err) {
+        console.log(err);
+        return error
+    }
+}
+
+
+//Funcion manejadora de errores.
+function errorHandle(_id_article:string , review_descrip:string, score: string){
     if(!_id_article) return (errorReviewArticle.NULL_ID_ARTICLE_NOT_ALLOWED);
-    if(!review.review_descrip) return (errorReviewArticle.NULL_REVIEWS_NOT_ALLOWED);
-    if(!review.score) return (errorReviewArticle.NULL_SCORE_NOT_ALLOWED);
-    let countWords = review.review_descrip.split(" ");
+    if(!review_descrip) return (errorReviewArticle.NULL_REVIEWS_NOT_ALLOWED);
+    if(!score) return (errorReviewArticle.NULL_SCORE_NOT_ALLOWED);
+    let countWords = review_descrip.split(" ");
     if(countWords.length < 5){
         return (errorReviewArticle.MINIMUN_SIZE_5_WORDS);
     } else if(countWords.length > 400){
         return (errorReviewArticle.MAXIMUN_SIZE_400_WORDS);
     }
-    if(parseInt(review.score) <= 0 || parseInt(review.score) >= 6){
+    if(parseInt(score) <= 0 || parseInt(score) >= 6){
         return (errorReviewArticle.ERROR_SCORE)
     }
+    return false;
 }
 
 /*
