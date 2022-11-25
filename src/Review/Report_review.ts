@@ -2,11 +2,12 @@ import { IUser } from "../Interface/UserReq.Interface";
 import { getUser } from "../Redis/UserRedis";
 import errorsReport from '../Error/Error_report';
 import { IReviewDB, IStateReviewDB } from "../Interface/Review.interface";
-import { searchStateReview } from "../Schema/State_review.model";
-import { searchReview } from "../Schema/Review.model";
+import { modifyStateReviewReportedDB, searchStateReview } from "../Schema/State_review.model";
+import { lowLogicReviewDB, searchReview } from "../Schema/Review.model";
 import { sendReportToReportServer } from "../Rabbit/ReportServer";
 
 
+//Función para reportar una review realizada por un usuario.
 export async function addReportToReview(token: string, _id_review: string, reasonReport: string){
     try {
         const user: IUser = await getUser(token);
@@ -32,11 +33,24 @@ export async function addReportToReview(token: string, _id_review: string, reaso
     }
 }
 
-export async function hiddenReviewReported(){
-    console.log("SON EL OCULTADOR DE REVIEWS")
+//Función para ocultar una reseña cuando nos llega un mensaje asíncrono desde el Servicio de Reports.
+export async function hiddenReviewReported(_id_review: string, stateReviewActive: boolean, reason_report: string){
+    try{
+        //Busco el estado de la review por medio del id de la review.
+        let stateReviewSearched: IStateReviewDB | any = await searchStateReview(_id_review);
+        if(stateReviewSearched.stateReviewActive = false) {return (errorsReport.REPORTED_REVIEW)}
+    
+        const lowLogicReview = await lowLogicReviewDB(_id_review);
+        const lowLogicStateReview = await modifyStateReviewReportedDB(_id_review, stateReviewActive, reason_report);
+        console.log(lowLogicReview)
+        console.log(lowLogicStateReview);
+        console.log("Se oculto la review N°", _id_review)
+    }catch(err){
+        throw err;
+    }  
 }
 
-
+//Manejador de errores.
 function errorHandle(_id_review: string , reasonReport: string ){
     if(!_id_review) return errorsReport.NULL_ID_REVIEW_NOT_ALLOWED;
     if(!reasonReport) return errorsReport.NULL_REPORT_REVIEW_NOT_ALLOWED;

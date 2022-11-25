@@ -6,6 +6,7 @@ import { redisInit } from './Redis/UserRedis';
 import { consumerResponseArticleBought } from './Rabbit/OrderServer';
 import { consumerReportServer } from './Rabbit/ReportServer';
 import { logoutSession } from './Rabbit/AuthorizationServer';
+import { consumerAllReviewArticle } from './Rabbit/CatalogServer';
 
 const config = environmentsConfig(); //Variables de entorno
 const PORT = config.port;
@@ -22,6 +23,7 @@ redisInit();
 // Conexiones a rabbit.
 consumerResponseArticleBought();
 consumerReportServer();
+consumerAllReviewArticle();
 logoutSession();
 
 //Inicio instancia de express

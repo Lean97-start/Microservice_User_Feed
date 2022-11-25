@@ -5,6 +5,7 @@ export interface IValidateArticleBought{
 export interface IMessageToSendValidationOrder{
     _id_user: string,
     _id_article: string,
+    _id_review: string,
     state_order: string
 }
 

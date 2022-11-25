@@ -14,12 +14,14 @@ export interface IReviewCreate {
   _id_article: string;
   review_descript: string;
   score: number;
+  visibility?: boolean;
 }
 export interface IReviewModify {
   _id_user: string;
   _id_review: string;
   review_descript: string;
   score: number;
+  visibility?: boolean;
 }
 
 export interface IStateReviewCreate {
@@ -34,6 +36,7 @@ export interface IReviewDB {
   _id_article: string;
   review_descript: string;
   score: number;
+  visibility?: boolean;
   createdAt: Date;
   updatedAt: Date;
 }

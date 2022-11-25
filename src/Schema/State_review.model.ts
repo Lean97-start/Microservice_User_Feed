@@ -28,6 +28,8 @@ const state_Review = model('State_Review', state_review); //Vinculo el schema en
 export default state_Review;
 
 
+
+//Función que me permite crear un estado asociado a una review.
 export async function createStateReview(_id_review: string){
     try{
         const objectStateReview: IStateReviewCreate = {
@@ -38,25 +40,26 @@ export async function createStateReview(_id_review: string){
         const stateReviewCreated = state_Review.create(objectStateReview)
         return stateReviewCreated;
     }catch(err){
-        return error.ERROR_SERVER
+        throw error.ERROR_SERVER
     }
 }
 
+//Función que me permite buscar el estado de una review.
 export async function searchStateReview(_id: string){
     try {
-        const reviewFound = await state_Review.findOne({_id_review: _id});
-        return reviewFound;    
+        const stateReviewFound = await state_Review.findOne({_id_review: _id});
+        return stateReviewFound;    
     } catch (err) {
-        return error.ERROR_SERVER
+        throw error.ERROR_SERVER
     }
 }
 
-
-export async function deleteStateReview(_id: string){
+//Función que me permite cambiar el estado de un review que ha sido reportada
+export async function modifyStateReviewReportedDB(_id_review: string, stateReviewActive: boolean, reason_report: string){
     try {
-        const reviewModify: IStateReviewDB | any = await state_Review.findOneAndDelete({_id_review: _id});
-        if(reviewModify) return true;       
+        const stateReviewModifyReported: IStateReviewDB | any = await state_Review.findOneAndUpdate({_id: _id_review}, {stateReviewActive, reason_state: reason_report}, {new: true});
+        return stateReviewModifyReported;    
     } catch (err) {
-        return error.ERROR_SERVER
+        throw error.ERROR_SERVER
     }
 }

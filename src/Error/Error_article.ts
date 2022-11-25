@@ -11,6 +11,8 @@ export default {
   ERROR_SERVER: { error_message: "An error occurred, try again" },
   ERROR_MODIFY_REVIEW: { error_message: "Error modify review, try again" },
   ERROR_DELETE_REVIEW: { error_message: "Error delete review, try again" },
+  ERROR_VISIBILITY_FALSE: { error_message: "Error review equals false" },
+  ERROR_COULD_NOT_BE_DELETE: { error_message: "Review could not be unsubscribed" },
   REPORTED_REVIEW: { error_message: "Reported review" },
   NOT_CANNOT_MODIFY_REVIEW_NOT_AUTHORIZATION: { error_message: "Not authorization, you cannot modify the review" },
 };

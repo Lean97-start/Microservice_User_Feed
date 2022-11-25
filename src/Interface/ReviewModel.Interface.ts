@@ -2,7 +2,8 @@ export interface IReview{
     _id_user: string,
     _id_article: string,
     review_descript: string,
-    score: number
+    score: number,
+    visibility: boolean
 }
 
 export interface IState_Review{

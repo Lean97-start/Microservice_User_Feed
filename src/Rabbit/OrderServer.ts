@@ -8,7 +8,7 @@ import { sendMessage } from "./EmitterRabbit/Emitter";
 // import { createConsumerArticleBought } from "./ReceiveRabbit/Receive";
 import { createConsumer } from "./ReceiveRabbit/Receive";
 
-export async function sendMessageValidateArticleBought(_id_user: string, _id_article: string): Promise<IRabbitMessage> {
+export async function sendMessageValidateArticleBought(_id_user: string, _id_article: string, _id_review: string): Promise<IRabbitMessage> {
   const messageToOrder: IRabbitMessage = {
     type: 'validate_article_bought_user',
     exchange: 'validate_article_bought_user',
@@ -16,6 +16,7 @@ export async function sendMessageValidateArticleBought(_id_user: string, _id_art
     message: {
       _id_user,
       _id_article,
+      _id_review,
       state_order: "PAYMENT_DEFINED",
     } as IMessageToSendValidationOrder,
   };
