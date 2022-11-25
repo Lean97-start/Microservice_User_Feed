@@ -10,8 +10,6 @@ export function environmentsConfig(): Config {
             port: env.SERVER_PORT || "3150",            
             mongoDb: env.MONGO_URL || "mongodb://localhost/review",
             securityServer: env.AUTH_SERVICE_URL || "http://localhost:3000",
-            catalogServer: env.CATALOG_SERVICE_URL ||"http://localhost:3002",
-            orderServer: env.ORDER_SERVICE_URL || "http://localhost:3003",
             rabbitUrl: env.RABBIT_URL || "amqp://localhost",
             redisUrl: env.REDIS_URL || 'redis://localhost:6379'
         }
@@ -24,8 +22,6 @@ export interface Config {
     port: string;
     mongoDb: string;
     securityServer: string;
-    catalogServer: string;
-    orderServer: string
     rabbitUrl: string;
     redisUrl: string
 }

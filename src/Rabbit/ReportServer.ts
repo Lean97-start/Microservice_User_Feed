@@ -7,7 +7,7 @@ import { createConsumer } from "./ReceiveRabbit/Receive";
 export async function sendReportToReportServer(_id_review: string, reason_report: string, review_description: string, user_reviewer: string){
     const messageToReport: IRabbitMessage = {
         type: 'review_report_check',
-        exchange: 'review_report_check',
+        exchange: 'report',
         queue: 'review_report_check',
         message: {
             _id_review,
@@ -23,7 +23,8 @@ export async function sendReportToReportServer(_id_review: string, reason_report
 export async function consumerReportServer(){
     const propsConsumer = {
       exchange: 'review',
-      queue: 'result_check_review_report'
+      queue: 'review_report',
+      routingKey: 'result_check_review_report'
     }
     //Creo el consumidor y le paso la funcion que ejecutara cuando llega un mensaje.
     await createConsumer(propsConsumer, hiddenReviewReported);

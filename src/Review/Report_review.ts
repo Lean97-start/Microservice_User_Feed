@@ -6,6 +6,12 @@ import { modifyStateReviewReportedDB, searchStateReview } from "../Schema/State_
 import { lowLogicReviewDB, searchReview } from "../Schema/Review.model";
 import { sendReportToReportServer } from "../Rabbit/ReportServer";
 
+//Manejador de errores.
+function errorHandle(_id_review: string , reasonReport: string ){
+    if(!_id_review) return errorsReport.NULL_ID_REVIEW_NOT_ALLOWED;
+    if(!reasonReport) return errorsReport.NULL_REPORT_REVIEW_NOT_ALLOWED;
+    return false;
+}
 
 //Función para reportar una review realizada por un usuario.
 export async function addReportToReview(token: string, _id_review: string, reasonReport: string){
@@ -28,7 +34,8 @@ export async function addReportToReview(token: string, _id_review: string, reaso
         }else{
             return errorsReport.ERROR_SENT_MESSAGE;
         }
-    } catch (error) {
+    } catch (err: any) {
+        console.log("Ocurrio un error en la creación de un reporte sobre una review SERVER", err.message)
         return errorsReport.ERROR_SERVER;
     }
 }
@@ -46,14 +53,8 @@ export async function hiddenReviewReported(_id_review: string, stateReviewActive
         console.log(lowLogicStateReview);
         console.log("Se oculto la review N°", _id_review)
         return
-    }catch(err){
+    }catch(err: any){
+        console.log("Ocurrio un error en el proceso de ocultar un reporte sobre una review SERVER", err.message)
         throw err;
     }  
-}
-
-//Manejador de errores.
-function errorHandle(_id_review: string , reasonReport: string ){
-    if(!_id_review) return errorsReport.NULL_ID_REVIEW_NOT_ALLOWED;
-    if(!reasonReport) return errorsReport.NULL_REPORT_REVIEW_NOT_ALLOWED;
-    return false;
 }

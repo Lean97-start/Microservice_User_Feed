@@ -10,7 +10,7 @@ export async function validationToken( req: Request, res: Response, next: NextFu
 
     let token = req.header("Authorization"); //Extraigo el token.
 
-    if (!token) {return res.status(401).json(error.NULL_TOKEN)} //Token NULL
+    if (!token) {return res.status(error.INVALID_TOKEN.errorCode).json(error.NULL_TOKEN.error_message)} //Token NULL
 
     token = token.split(" ")[1] //Separo el Bearer {token} para solo quedarme con el token.
 
@@ -19,10 +19,12 @@ export async function validationToken( req: Request, res: Response, next: NextFu
         if(userToken){
             next();
         }else{
-            return res.status(401).json(error.INVALID_TOKEN);
+            return res.status(error.INVALID_TOKEN.errorCode).json(error.INVALID_TOKEN.error_message);
         }     
     })
-    .catch(errorCatch => console.log(errorCatch))    
+    .catch(errorCatch => {
+        return res.status(error.ERROR_SERVER.errorCode).json(errorCatch);
+    })    
 }
 
 

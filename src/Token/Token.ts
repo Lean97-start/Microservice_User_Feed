@@ -9,17 +9,27 @@ const env = environmentsConfig();
 
 export async function validateToken(token: string) {
   try {
+    //Busco la sesión del usuario en la caché.
     let userCache = await getUser(token);
     if (userCache) {
-      return userCache; // if (userCache) return userCache;
+      return true;
     }
-    let userTEST = createUserReadis(); //Llamo a una funcion que harckodea una session.
-    let responseRedis: boolean = await setUser(token, userTEST);
-    if (responseRedis) {
-      return responseRedis;
-    } else {
-      return new Error("No se pudo settear el usuario en la caché");
-    }
+  
+    // Si el token no está en la caché, lo busco en el servicio de auth.
+    let responseSaveCacheUser = await axios.get(
+      `${env.securityServer}/v1/users/current`, { headers: { "Authorization": `bearer ${token}`}})
+      .then(  async (response) => {
+                  if (await setUser(token, response.data)) {
+                    return true;
+                  }
+                  return false;
+                },
+              (reject) => {
+                  console.log("No lo pudo obtener al user del servicio de AUTH")
+                  return false;
+              });
+    return responseSaveCacheUser;
+
   } catch (err) {
     console.log(err);
     return err;
@@ -34,18 +44,6 @@ export async function invalidateToken(token: string) {
       console.log("Invalidate session token:", token);
     }
   }else{
-    console.log("El usuario no está")
+    console.log("User be not in cache")
   }
 }
-
-//     // Si el token no está en la caché, lo busco en el servicio de auth.
-//     axios.get(`${env.securityServer}/v1/users/current`, { headers: { "Authorization": token }})
-//     .then(  (response) => {
-//                 console.log(response.data, "PASS")
-//                 setUser(token, response.data); //Setteo el valor devuelto en la caché.
-//                 return true},
-
-//             (reject) => {
-//                 console.log(reject.data, "REJECT")
-//                 return Error_token.INVALID_TOKEN
-//             });

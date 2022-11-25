@@ -7,7 +7,7 @@
   export async function sendMessageReviewArticle(_id_article: string, reviews: Array<IReviewCreate>): Promise<IRabbitMessage> {
     const messageToOrder: IRabbitMessage = {
       type: 'article_reviews',
-      exchange: 'article_reviews',
+      exchange: 'catalog',
       queue: 'article_reviews',
       message: {
         _id_article,
@@ -21,7 +21,8 @@
   export async function consumerAllReviewArticle(){
     const propsConsumer = {
       exchange: "review",
-      queue: "reviews_article"
+      queue: "review_catalog",
+      routingKey: "reviews_article"
     }
     await createConsumer(propsConsumer, showAllReviewArticle);
   }

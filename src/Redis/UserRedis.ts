@@ -6,18 +6,34 @@ const redisEnv = environmentsConfig();
 
 let clienteRedis: any;
 
+
 export function redisInit(){
-    //Creo la instancia de Redis.
-    clienteRedis = createClient({
-        url: redisEnv.redisUrl
-    });
-    
-    //Connectamos a redis
-    clienteRedis.connect()
-    .then(
-        () => console.log("Redis connected"),
-        () => console.log("Redis failed")
-    )
+    try {
+        //Creo la instancia de Redis.
+        clienteRedis = createClient({
+            url: redisEnv.redisUrl
+        });
+        
+        //Connectamos a redis
+        clienteRedis.connect()
+        .then(
+            () => console.log("Redis connection created"),
+            () => {
+                console.log("Failed connection Redis, try again in 5 seconds");
+                setTimeout(() => redisInit(), 5000);
+            }
+        );
+        
+        //En el caso de que se caiga Redis, se ejecuta el siguiente procedimiento.
+        clienteRedis.on("error", function () {
+            console.error(`Se cerro la conexión con REDIS, intentado reconexión`);
+            redisInit();
+        });  
+
+    } catch (err: any) {
+        console.log("Failed connection Redis, try again in 5 seconds")
+        setTimeout(() => redisInit(), 5000)
+    }
 }
 
 export async function setUser(token: string, userData: any){
@@ -30,15 +46,20 @@ export async function getUser(token: string){
         let responseRedis = await clienteRedis.get(`${token}`)
         if(responseRedis) return JSON.parse(responseRedis.toString());
         return null
-    } catch (err) {
+    } catch (err: any) {
+        console.log(err.message)
         throw error.USER_NOT_FOUND_REDIS
     }   
 }
 
 export function deleteSessionUser(token: string){
-    return clienteRedis.del(token)
-        .then(
-            (res: number) => {return res},
-            (rej: any) => {return rej}
-        )
+    try {
+        return clienteRedis.del(token)
+            .then(
+                (res: number) => {return res},
+                (rej: any) => {return rej}
+            )
+    } catch (err: any) {
+        console.log(err.message)
     }
+}     

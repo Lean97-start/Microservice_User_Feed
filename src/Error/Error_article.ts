@@ -14,5 +14,6 @@ export default {
   ERROR_VISIBILITY_FALSE: {errorCode: 400 ,error_message: "Error review equals false" },
   ERROR_COULD_NOT_BE_DELETE: {errorCode: 500 ,error_message: "Review could not be unsubscribed" },
   REPORTED_REVIEW: {errorCode: 400 ,error_message: "Reported review" },
+  THERE_ARE_NOT_REVIEWS_ARTICLE : {errorCode: 200 ,error_message: "This article not has reviews"},
   NOT_CANNOT_MODIFY_REVIEW_NOT_AUTHORIZATION: {errorCode: 401 ,error_message: "Not authorization, you cannot modify the review" },
 };

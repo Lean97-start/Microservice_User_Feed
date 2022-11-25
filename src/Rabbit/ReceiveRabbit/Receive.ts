@@ -11,13 +11,21 @@ const env = environmentsConfig();
 export async function createConsumer(propsConsumer: IPropsConsumer, functionType: any) {
     try {
         amqp.connect(env.rabbitUrl, (errorConnection: any, connection: amqp.Connection) => {
-            if (errorConnection) return new Error(errorConnection);
+            if (errorConnection) {
+                console.error(`No se pudo conectar a RABBITMQ la cola con routingKey ${propsConsumer.routingKey}, intentado reconexión en 5 segundos`);
+                setTimeout(() => createConsumer(propsConsumer, functionType), 5000);
+                return
+            }else
             connection.createChannel((errorCreateChannel: any, channel: amqp.Channel) => {
                 if (errorCreateChannel) return new Error(errorCreateChannel);
+                channel.on("close", function () {
+                    console.error(`Se cerro la sesión de rabbit en el exchange ${propsConsumer.routingKey}, intentado reconexión en 5 segundos`);
+                    setTimeout(() => createConsumer(propsConsumer, functionType), 5000);
+                });
                 channel.assertExchange(propsConsumer.exchange, 'direct', {durable: false});
                 channel.assertQueue(propsConsumer.queue, { exclusive: true }, (errorAssertQueue, queue) => {
                     if(errorAssertQueue) throw errorAssertQueue;
-                    channel.bindQueue(queue.queue, propsConsumer.exchange, queue.queue)
+                    channel.bindQueue(queue.queue, propsConsumer.exchange, propsConsumer.routingKey)
                     console.log(`Queue ${propsConsumer.queue} active and listening`);
                     channel.consume(queue.queue, (msg) => {
                         if(msg){
@@ -31,10 +39,9 @@ export async function createConsumer(propsConsumer: IPropsConsumer, functionType
                 }); 
             });
         });
-    } catch (err) {
-        console.log(err)
-        createConsumer(propsConsumer, functionType);
-        throw new Error(`Cannot create consumer with exchange ${propsConsumer.exchange} and queue ${propsConsumer.queue}`);
+    } catch (err: any) {
+        console.error(`Se cerro la sesión de rabbit en el exchange ${propsConsumer.routingKey} por causa de ${err.message}, intentado reconexión en 5 segundos`);
+        setTimeout(() => createConsumer(propsConsumer, functionType), 5000);
     }
 }
 
@@ -42,14 +49,22 @@ export async function logoutSessionRabbit(propsConsumer: IPropsLogoutConsumer, f
     let queueCreated;
     try {
         amqp.connect(env.rabbitUrl, (errorConnection: any, connection: amqp.Connection) => {
-            if (errorConnection) return new Error(errorConnection);
+            if (errorConnection) {
+                console.error(`No se pudo conectar a RABBITMQ el exchange ${propsConsumer.exchange}, intentado reconexión en 5 segundos`);
+                setTimeout(() => logoutSessionRabbit(propsConsumer, functionType), 5000);
+                return
+            }else
             connection.createChannel((errorCreateChannel: any, channel: amqp.Channel) => {
                 if (errorCreateChannel) return new Error(errorCreateChannel);
+                channel.on("close", function () {
+                    console.error(`Se cerro la sesión de rabbit en el exchange ${propsConsumer.exchange}, intentado reconexión en 5 segundos`);
+                    setTimeout(() => logoutSessionRabbit(propsConsumer, functionType), 5000);
+                });
                 channel.assertExchange(propsConsumer.exchange, 'fanout', {durable: false});
-                channel.assertQueue("", { exclusive: true }, (errorAssertQueue, queue) => {
+                channel.assertQueue("logout", { exclusive: true }, (errorAssertQueue, queue) => {
                     if(errorAssertQueue) throw errorAssertQueue;
                     queueCreated = queue.queue;
-                    channel.bindQueue(queue.queue, propsConsumer.exchange, queue.queue)
+                    channel.bindQueue(queue.queue, propsConsumer.exchange, "")
                     console.log(`Queue ${queue.queue} active and listening`);
                     channel.consume(queue.queue, (msg) => {
                         if(msg){
@@ -62,9 +77,8 @@ export async function logoutSessionRabbit(propsConsumer: IPropsLogoutConsumer, f
                 }); 
             });
         });
-    } catch (err) {
-        console.log(err)
-        // createConsumer(propsConsumer);
-        throw new Error(`Cannot create consumer with exchange ${propsConsumer.exchange} and queue ${queueCreated}`);
+    } catch (err: any) {
+        console.error(`Se cerro la sesión de rabbit en el exchange ${propsConsumer.exchange} por causa de ${err.message}, intentado reconexión en 5 segundos`);
+        setTimeout(() => logoutSessionRabbit(propsConsumer, functionType), 5000);
     }
 }

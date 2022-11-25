@@ -12,7 +12,7 @@ export async function sendMessage(message: IRabbitMessage): Promise<IRabbitMessa
         const exchange = await channel.assertExchange(message.exchange, 'direct', {durable: false});
         const queue = await channel.assertQueue(message.queue, {durable: false});
         if(channel.publish(exchange.exchange, queue.queue, Buffer.from(JSON.stringify(message)))){
-            console.log("Sent Message");
+            console.log(`Sent Message to ${exchange.exchange} server`);
             messageSent = message;
             // conn.close()
         }     

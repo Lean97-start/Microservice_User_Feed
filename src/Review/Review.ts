@@ -115,24 +115,24 @@ export async function deleteReview(token: string, _id_review:string){
 //Funcion manejadora de errores.
 function errorHandle( review_descrip:string, score: string, _id_article?:string , _id_review?: string){
     if(_id_article?.length){
-        if(!_id_article) return (errorReviewArticle.NULL_ID_ARTICLE_NOT_ALLOWED);
-        if(!review_descrip) return (errorReviewArticle.NULL_REVIEWS_NOT_ALLOWED);
-        if(!score) return (errorReviewArticle.NULL_SCORE_NOT_ALLOWED);
+        if(!_id_article) return (errorReviewArticle.NULL_ID_ARTICLE_NOT_ALLOWED.error_message);
+        if(!review_descrip) return (errorReviewArticle.NULL_REVIEWS_NOT_ALLOWED.error_message);
+        if(!score) return (errorReviewArticle.NULL_SCORE_NOT_ALLOWED.error_message);
     }
     if(!_id_article){
         if(!_id_review){
-            return (errorReviewArticle.NULL_ID_REVIEW_NOT_ALLOWED);
+            return (errorReviewArticle.NULL_ID_REVIEW_NOT_ALLOWED.error_message);
         }
     }
 
     let countWords = review_descrip.split(" ");
     if(countWords.length < 5){
-        return (errorReviewArticle.MINIMUN_SIZE_5_WORDS);
+        return (errorReviewArticle.MINIMUN_SIZE_5_WORDS.error_message);
     } else if(countWords.length > 400){
-        return (errorReviewArticle.MAXIMUN_SIZE_400_WORDS);
+        return (errorReviewArticle.MAXIMUN_SIZE_400_WORDS.error_message);
     }
     if(parseInt(score) <= 0 || parseInt(score) >= 6){
-        return (errorReviewArticle.ERROR_SCORE)
+        return (errorReviewArticle.ERROR_SCORE.error_message)
     }
     return false;
 }
@@ -140,13 +140,15 @@ function errorHandle( review_descrip:string, score: string, _id_article?:string 
 //Función que retorna al servicio de catalog todas las reseñas de un artículo.
 export async function showAllReviewArticle(_id_article: string){
    try {
-    //Busco en la DB la review que coincide con el _id_review pasado por parámetro.
-    let reviewSearched: Array<IReviewDB> | any = await searchReviewByArticle(_id_article);
-    if(reviewSearched.length){return console.log(reviewSearched)};
-    return console.log("No tiene reseñas")
-    // if(reviewSearched._id_user !== _id_user){ return (errorReviewArticle.NOT_CANNOT_MODIFY_REVIEW_NOT_AUTHORIZATION)}
+        ;
+        //Busco en la DB la review que coincide con el _id_review pasado por parámetro.
+        let reviewSearched: Array<IReviewDB> | any = await searchReviewByArticle(_id_article);
+        let reviews = (reviewSearched.length)? reviewSearched : errorReviewArticle.THERE_ARE_NOT_REVIEWS_ARTICLE.error_message;
+        sendMessageReviewArticle(_id_article, reviews);
+        
    } catch (error) {
-    
+        console.log("Huvo un error al intentar enviar todas las reviews del articulo pasado por el servicio de catalogo",error)
+        showAllReviewArticle(_id_article);
    } 
     // sendMessageReviewArticle(_id_article,);
 }

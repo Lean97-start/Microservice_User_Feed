@@ -11,7 +11,8 @@ export interface IMessageToSendValidationOrder{
 
 export interface IPropsConsumer{
     exchange: string,
-    queue: string
+    queue: string,
+    routingKey: string
 }
 
 export interface IPropsLogoutConsumer{
