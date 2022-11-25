@@ -15,3 +15,8 @@ export interface ISession {
 export interface IUserReq extends express.Request{
     user: ISession
 }
+
+export interface ITokenLogout{
+    type: "string",
+    message: "string"
+}

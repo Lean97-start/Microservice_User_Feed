@@ -2,7 +2,7 @@ import { environmentsConfig } from "../Config/Environments";
 import axios from "axios";
 import Error_token from "../Error/Error_token";
 import { deleteSessionUser, getUser, setUser } from "../Redis/UserRedis";
-import { ISession, IUser } from "../Interface/UserReq.Interface";
+import { ISession, ITokenLogout, IUser } from "../Interface/UserReq.Interface";
 import { createUserReadis } from "../TEST/RedisUsersTEST";
 
 const env = environmentsConfig();
@@ -37,7 +37,8 @@ export async function validateToken(token: string) {
 }
 
 // Función para eliminar una sesión
-export async function invalidateToken(token: string) {
+export async function invalidateToken(logout: ITokenLogout) {
+  let token = logout.message.split(" ")[1] //Separo el Bearer {token} para solo quedarme con el token.
   let existUser = await getUser(token);
   if (existUser) {
     if(await deleteSessionUser(token)){

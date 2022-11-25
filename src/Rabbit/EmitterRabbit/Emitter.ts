@@ -14,7 +14,6 @@ export async function sendMessage(message: IRabbitMessage): Promise<IRabbitMessa
         if(channel.publish(exchange.exchange, queue.queue, Buffer.from(JSON.stringify(message)))){
             console.log(`Sent Message to ${exchange.exchange} server`);
             messageSent = message;
-            // conn.close()
         }     
     } catch (error) {
         console.log(`RabbitMQ ${message.exchange} connection failed: ${error}`);

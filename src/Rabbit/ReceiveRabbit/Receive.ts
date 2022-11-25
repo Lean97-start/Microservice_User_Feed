@@ -69,6 +69,7 @@ export async function logoutSessionRabbit(propsConsumer: IPropsLogoutConsumer, f
                     channel.consume(queue.queue, (msg) => {
                         if(msg){
                             let content: IRabbitMessage = JSON.parse(msg.content.toString());
+                            console.log("Logout user with token: ",JSON.parse(msg.content.toString()))
                             return functionType(content);
                         }
                     },{
