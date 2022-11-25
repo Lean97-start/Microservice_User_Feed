@@ -45,6 +45,7 @@ export async function hiddenReviewReported(_id_review: string, stateReviewActive
         console.log(lowLogicReview)
         console.log(lowLogicStateReview);
         console.log("Se oculto la review N°", _id_review)
+        return
     }catch(err){
         throw err;
     }  

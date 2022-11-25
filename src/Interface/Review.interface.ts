@@ -48,3 +48,8 @@ export interface IStateReviewDB {
   createdAt: Date;
   updatedAt: Date;
 }
+
+export interface ErrorResponse{
+  errorCode: number,
+  error_message: string
+}
