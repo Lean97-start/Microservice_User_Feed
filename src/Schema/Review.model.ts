@@ -104,7 +104,7 @@ export async function lowLogicReviewDB(_id_review: string){
 
 export async function searchReviewByArticle(_id_article: string){
     try {
-        let reviewsSearched: any =  Review.find({_id_awticle: {$eq: _id_article}, visibility: true})
+        let reviewsSearched: any =  Review.find({_id_article: {$eq: _id_article}, visibility: true})
         .then((reviews: any)=> {
             return reviews
         }, (error:any )=> {console.log(error)})    

@@ -1,9 +1,7 @@
 import { environmentsConfig } from "../Config/Environments";
 import axios from "axios";
-import Error_token from "../Error/Error_token";
 import { deleteSessionUser, getUser, setUser } from "../Redis/UserRedis";
-import { ISession, ITokenLogout, IUser } from "../Interface/UserReq.Interface";
-import { createUserReadis } from "../TEST/RedisUsersTEST";
+import { ITokenLogout } from "../Interface/UserReq.Interface";
 
 const env = environmentsConfig();
 

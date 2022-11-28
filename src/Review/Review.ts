@@ -1,7 +1,6 @@
 import { sendMessageValidateArticleBought } from "../Rabbit/OrderServer";
 import { getUser } from "../Redis/UserRedis";
 import errorReview from "../Error/Error_review";
-import { EventEmitter } from 'node:events';
 import { IResponseOrderServer, IReview, IReviewCreate, IReviewDB, IStateReviewDB } from "../Interface/Review.interface";
 import { IUser } from "../Interface/UserReq.Interface";
 import errorReviewArticle from "../Error/Error_article";
@@ -140,6 +139,20 @@ export async function deleteReview(token: string, _id_review:string){
     }
 }
 
+//Función que retorna al servicio de catalog todas las reseñas de un artículo.
+export async function showAllReviewArticle(requestCatalogServer: any){
+   try {
+        //Busco en la DB la review que coincide con el _id_review pasado por parámetro.
+        let reviewSearched: Array<IReviewDB> | any = await searchReviewByArticle(requestCatalogServer._id_article);
+        let reviews = (reviewSearched.length > 0)?  reviewSearched : errorReviewArticle.THERE_ARE_NOT_REVIEWS_ARTICLE.error_message;
+        await sendMessageReviewArticle(requestCatalogServer._id_article, reviews);
+        console.log(`The reviews with id_article ${requestCatalogServer._id_article} was sent`);
+
+   } catch (error) {
+        console.log("Hubo un error al intentar enviar todas las reviews del articulo pasado por el servicio de catalogo",error)
+        showAllReviewArticle(requestCatalogServer._id_article);
+   }
+}
 
 //Funcion manejadora de errores.
 function errorHandle( review: IReview, _id_article?:string , _id_review?: string){
@@ -164,21 +177,4 @@ function errorHandle( review: IReview, _id_article?:string , _id_review?: string
         return (errorReviewArticle.ERROR_SCORE)
     }
     return false;
-}
-
-//Función que retorna al servicio de catalog todas las reseñas de un artículo.
-export async function showAllReviewArticle(_id_article: string){
-   try {
-        ;
-        //Busco en la DB la review que coincide con el _id_review pasado por parámetro.
-        let reviewSearched: Array<IReviewDB> | any = await searchReviewByArticle(_id_article);
-        let reviews = (reviewSearched.length)? reviewSearched : errorReviewArticle.THERE_ARE_NOT_REVIEWS_ARTICLE.error_message;
-        await sendMessageReviewArticle(_id_article, reviews);
-        console.log(`The reviews with id_article ${_id_article} was sent`);
-
-   } catch (error) {
-        console.log("Hubo un error al intentar enviar todas las reviews del articulo pasado por el servicio de catalogo",error)
-        showAllReviewArticle(_id_article);
-   } 
-    // sendMessageReviewArticle(_id_article,);
 }

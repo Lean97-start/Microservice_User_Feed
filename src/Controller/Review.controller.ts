@@ -1,10 +1,6 @@
 import { Request, Response } from "express";
-import errorArticleBought from "../Error/Error_review";
 import errorReviewArticle from "../Error/Error_article";
-import  {IUserReq}  from "../Interface/UserReq.Interface";
-import { getUser } from "../Redis/UserRedis";
-import { addReview, consultUserArticleBought, deleteReview, modifyReview } from "../Review/Review";
-import { IErrorResponse, IReviewCreate } from "../Interface/Review.interface";
+import { addReview, deleteReview, modifyReview } from "../Review/Review";
 
 
 export async function addReviewArticle(req: Request, res: Response){

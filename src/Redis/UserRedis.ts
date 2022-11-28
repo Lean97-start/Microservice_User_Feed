@@ -1,7 +1,6 @@
 import error from '../Error/Error_user';
 import { createClient } from 'redis';
 import { environmentsConfig} from '../Config/Environments';
-// import { ISession, IUser } from '../Interface/UserReq.Interface';
 const redisEnv = environmentsConfig();
 
 let clienteRedis: any;
