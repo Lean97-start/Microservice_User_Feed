@@ -4,3 +4,9 @@ export interface IReportRabbit {
   review_description: string;
   user_reviewer: string;
 }
+
+export interface IResponseReportServer{
+  _id_review: string,
+  stateReviewActive: boolean,
+  reason_report: string
+}

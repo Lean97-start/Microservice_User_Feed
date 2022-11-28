@@ -4,7 +4,7 @@ import errorReviewArticle from "../Error/Error_article";
 import  {IUserReq}  from "../Interface/UserReq.Interface";
 import { getUser } from "../Redis/UserRedis";
 import { addReview, consultUserArticleBought, deleteReview, modifyReview } from "../Review/Review";
-import { ErrorResponse, IReviewCreate } from "../Interface/Review.interface";
+import { IErrorResponse, IReviewCreate } from "../Interface/Review.interface";
 
 
 export async function addReviewArticle(req: Request, res: Response){
@@ -19,7 +19,7 @@ export async function addReviewArticle(req: Request, res: Response){
         const addReviewResult: any = await addReview(token, _id_article, review);
 
         //Valido si ocurrido algún error en el proceso de crear una review.
-        if(addReviewResult.hasOwnProperty("error_message")) res.status(addReviewResult.errorCode).json(addReviewResult.error_message)
+        if(addReviewResult.hasOwnProperty("error_message")) return res.status(addReviewResult.errorCode).json(addReviewResult.error_message)
         
         return res.send(addReviewResult);
         
@@ -42,7 +42,7 @@ export async function modifyReviewArticle(req: Request, res: Response){
         const modifyReviewResult: any = await modifyReview(token, _id_review, review);
         
         //Valido si ocurrido algún error en el proceso de crear una review.
-        if(modifyReviewResult.hasOwnProperty("error_message")) res.status(modifyReviewResult.errorCode).json(modifyReviewResult.error_message)
+        if(modifyReviewResult.hasOwnProperty("error_message")) return res.status(modifyReviewResult.errorCode).json(modifyReviewResult.error_message)
         
         return res.send(modifyReviewResult);
         
@@ -65,7 +65,7 @@ export async function deleteReviewArticle(req: Request, res: Response){
         const deleteReviewResult: any = await deleteReview(token, _id_review);
 
         //Valido si ocurrido algún error en el proceso de dar una baja lógica a una review.
-        if(deleteReviewResult.hasOwnProperty("error_message")) res.status(deleteReviewResult.errorCode).json(deleteReviewResult.error_message)
+        if(deleteReviewResult.hasOwnProperty("error_message")) return res.status(deleteReviewResult.errorCode).json(deleteReviewResult.error_message)
         
         return res.send(deleteReviewResult);
 

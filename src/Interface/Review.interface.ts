@@ -49,7 +49,12 @@ export interface IStateReviewDB {
   updatedAt: Date;
 }
 
-export interface ErrorResponse{
+export interface IErrorResponse{
   errorCode: number,
   error_message: string
+}
+
+export interface IResponseOrderServer{
+  _id_review: string,
+  article_bought_user: boolean
 }

@@ -2,6 +2,7 @@ import { Schema, model } from "mongoose";
 import { IReviewCreate, IReviewDB, IStateReviewDB } from "../Interface/Review.interface";
 import { IReview } from "../Interface/ReviewModel.Interface";
 import error from '../Error/Error_article';
+import errorReview from '../Error/Error_review';
 
 const review = new Schema <IReview>(
     {
@@ -48,13 +49,14 @@ export async function createReview(review: IReviewCreate){
 }
 
 
-export async function searchReview(_id: string){ 
+export async function searchReview(_id_review: string){ 
     try {
-        let reviewSearched: any =  Review.findOne({_id_review: {$eq: _id}})
+        let reviewSearched: any =  Review.findOne({_id: {$eq: _id_review}})
         .then((review: any)=> {
-            console.log("Estoy dentro", review);
             return review
-        }, (error:any )=> {console.log(error)})    
+        }, (error:any )=> {
+            return errorReview.NOT_EXIST_THE_REVIEW;
+        })    
         .catch ((err: any )=> {return error.ERROR_SERVER}) 
         return reviewSearched; 
     } catch (err: any) {
@@ -66,7 +68,7 @@ export async function searchReview(_id: string){
 
 export async function modifyEnableReviewDB(_id_review: string){
     try {
-        const reviewModify: IReviewDB | any = await Review.findOneAndUpdate({_id: _id_review}, {visibility: true}, {new: true});
+        const reviewModify: IReviewDB | any = await Review.findOneAndUpdate({_id: {$eq: _id_review}}, {visibility: true}, {new: true});
         return reviewModify;    
     } catch (err: any) {
         console.log("Error en modificar la visibilidad en la DB", err.message);
@@ -77,7 +79,7 @@ export async function modifyEnableReviewDB(_id_review: string){
 
 export async function modifyReviewDB(_id_review: string, review_descript: string, score: number){
     try {
-        const reviewModify: IReviewDB | any = await Review.findOneAndUpdate({_id: _id_review, visibility: true}, {review_descript, score}, {new: true});
+        const reviewModify: IReviewDB | any = await Review.findOneAndUpdate({_id: {$eq: _id_review}, visibility: true}, {review_descript, score}, {new: true});
         return reviewModify;    
     } catch (err: any) {
         console.log("Error en modificar la review de la DB", err.message);
@@ -88,14 +90,12 @@ export async function modifyReviewDB(_id_review: string, review_descript: string
 
 export async function lowLogicReviewDB(_id_review: string){
     try {
-        console.log(_id_review)
-            let response = Review.findOneAndUpdate({_id: {$eq: _id_review}, visibility: true}, {visibility: false}, {new: true})
-                .then((review: any) => {
-                    console.log(review);
-                    return review;
-                }, (error) => { return new Error(error)})
-                .catch(() => {return error.ERROR_SERVER})
-            return response;
+        let response: IStateReviewDB | any = await Review.findOneAndUpdate({_id: {$eq: _id_review}}, {visibility: false}, {new: true})
+            .then((review: any) => {
+                return review;
+            }, (error) => { return new Error(error)})
+            .catch(() => {return error.ERROR_SERVER})  
+        return response;
     } catch (err: any) {
       console.log("Error en la baja lógica en la DB", err.message);
       return error.ERROR_SERVER  
@@ -106,7 +106,6 @@ export async function searchReviewByArticle(_id_article: string){
     try {
         let reviewsSearched: any =  Review.find({_id_awticle: {$eq: _id_article}, visibility: true})
         .then((reviews: any)=> {
-            console.log("Estoy dentro", reviews);
             return reviews
         }, (error:any )=> {console.log(error)})    
         .catch ((err: any )=> {return error.ERROR_SERVER}) 

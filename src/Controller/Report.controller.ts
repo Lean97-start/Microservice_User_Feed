@@ -15,7 +15,7 @@ export async function addReportReview(req: Request, res: Response){
         let responseAddReportReview: any = await addReportToReview(token, _id_review, reason);
 
         //Valido si ocurrido algún error en el proceso de crear un reporte de una review.
-        if(responseAddReportReview.hasOwnProperty("error_message")) res.status(responseAddReportReview.errorCode).json(responseAddReportReview.error_message)
+        if(responseAddReportReview.hasOwnProperty("error_message")) return res.status(responseAddReportReview.errorCode).json(responseAddReportReview.error_message)
         
         return res.status(200).send(responseAddReportReview);
 

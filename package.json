@@ -3,7 +3,9 @@
   "version": "1.0.0",
   "description": "Microservicio (Proyecto facultativo)",
   "scripts": {
-    "dev": "nodemon ./src/Server.ts"
+    "dev": "nodemon ./src/Server.ts",
+    "build": "tsc",
+    "start": "nodemon ./dist/Server.js"
   },
   "repository": {
     "type": "git",
