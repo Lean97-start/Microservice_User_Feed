@@ -25,17 +25,16 @@ export async function addReportToReview(token: string, _id_review: string, reaso
 
         //Busco en la DB la review que coincide con el _id_review pasado por parámetro.
         let reviewSearched: IReviewDB | any = await searchReview(_id_review);
-        console.log(reviewSearched)
         if(!reviewSearched){ return errorsReview.NOT_EXIST_THE_REVIEW};
-        if(reviewSearched.visibility === false){return errorsReview.REVIEW_IS_HIDDEN};
+        if(reviewSearched.visibility == false){return errorsReview.REVIEW_IS_HIDDEN};
 
         //Busco el estado de la review por medio del id de la review.
         let stateReviewSearched: IStateReviewDB | any = await searchStateReview(reviewSearched._id);
-        if(stateReviewSearched.stateReviewActive = false) {return (errorsReport.REPORTED_REVIEW)}
+        if(stateReviewSearched.stateReviewActive == false) {return (errorsReport.REPORTED_REVIEW)}
 
         let responseSentMessage = await sendReportToReportServer(_id_review, reasonReport, reviewSearched.review_descript, _id_user);
         if(responseSentMessage){
-            return "Review reported"
+            return {message: "Review reported"};
         }else{
             return errorsReport.ERROR_SENT_MESSAGE;
         }

@@ -117,7 +117,7 @@ export async function deleteReview(token: string, _id_review:string){
         
         //Busco en la DB la review que coincide con el _id_review pasado por parámetro.
         let reviewSearched: IReviewDB | any = await searchReview(_id_review);
-        if(!reviewSearched._id_user){ return (errorReview.NOT_EXIST_THE_REVIEW)};
+        if(!reviewSearched){ return (errorReview.NOT_EXIST_THE_REVIEW)};
         if(reviewSearched._id_user !== _id_user){ return (errorReviewArticle.NOT_CANNOT_MODIFY_REVIEW_NOT_AUTHORIZATION)};
         if(reviewSearched.visibility === false){ return (errorReviewArticle.ERROR_VISIBILITY_FALSE)};
         
