@@ -1,7 +1,10 @@
 
 # *Microservicio de User Feed*
 
-  
+  - ### Para ejecutar el proyecto debe ejecutar "NPM install" para instalar las dependencias. Luego ejecutar NPM run build, esto compilara el código TypeScript en código JavaScript. Por último, ejecutar NPM run start.
+
+---
+
 ## *Casos de uso*
   
 ### *Es un servicio que permite a los usuarios comentar review sobre los artículos que compraron, permite modificar una review, eliminarlas, reportarlas y ocultar reviews reportadas.*
