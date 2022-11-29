@@ -5,9 +5,9 @@
 
 ---
 
-# *Casos de uso*
+## *Casos de uso*
   
-> ### *Es un servicio que permite a los usuarios comentar review sobre los artículos que compraron, permite modificar una review, eliminarlas, reportarlas y ocultar reviews reportadas.*
+> #### *Es un servicio que permite a los usuarios comentar review sobre los artículos que compraron, permite modificar una review, eliminarlas, reportarlas y ocultar reviews reportadas.*
     
 ---
   
