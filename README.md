@@ -2,6 +2,9 @@
 # ***Microservicio de User Feed***
 
   > #### Para ejecutar el proyecto debe ejecutar "NPM install" para instalar las dependencias. Luego ejecutar NPM run build, esto compilara el código TypeScript en código JavaScript. Por último, ejecutar NPM run start.
+  
+   #### Tecnologías usadas:
+  	TypeScript, MongoDB, Mongoose, RabbitMQ, Redis
 
 ---
 
